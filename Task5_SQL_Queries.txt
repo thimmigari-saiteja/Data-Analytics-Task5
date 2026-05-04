@@ -1,0 +1,75 @@
+-- CREATE DATABASE
+CREATE DATABASE task4_db;
+
+-- USE DATABASE
+USE task4_db;
+
+-- CREATE CUSTOMERS TABLE
+CREATE TABLE Customers (
+    Customer_ID VARCHAR(10) PRIMARY KEY,
+    Customer_Name VARCHAR(50),
+    Region VARCHAR(20),
+    Segment VARCHAR(30)
+);
+
+-- CREATE PRODUCTS TABLE
+CREATE TABLE Products (
+    Product_ID VARCHAR(10) PRIMARY KEY,
+    Category VARCHAR(30),
+    Sub_Category VARCHAR(30)
+);
+
+-- CREATE ORDERS TABLE
+CREATE TABLE Orders (
+    Order_ID VARCHAR(10) PRIMARY KEY,
+    Order_Date DATE,
+    Customer_ID VARCHAR(10),
+    Product_ID VARCHAR(10),
+    Sales INT,
+    Profit INT,
+    Quantity INT,
+    FOREIGN KEY (Customer_ID) REFERENCES Customers(Customer_ID),
+    FOREIGN KEY (Product_ID) REFERENCES Products(Product_ID)
+);
+
+-- INSERT DATA INTO CUSTOMERS
+INSERT INTO Customers VALUES
+('C101','Arun','East','Consumer'),
+('C102','Priya','West','Corporate'),
+('C103','Ravi','South','Home Office');
+
+-- INSERT DATA INTO PRODUCTS
+INSERT INTO Products VALUES
+('P101','Technology','Laptop'),
+('P102','Furniture','Chair'),
+('P103','Office Supplies','Pen'),
+('P104','Technology','Mobile');
+
+-- INSERT DATA INTO ORDERS
+INSERT INTO Orders VALUES
+('O001','2025-01-01','C101','P101',12000,3000,2),
+('O002','2025-01-03','C102','P102',8000,1500,1),
+('O003','2025-01-05','C103','P103',15000,4000,3),
+('O004','2025-01-08','C101','P104',7000,1200,1);
+
+-- QUERY 1: TOTAL SALES BY REGION
+SELECT c.Region, SUM(o.Sales) AS Total_Sales
+FROM Orders o
+JOIN Customers c
+ON o.Customer_ID = c.Customer_ID
+GROUP BY c.Region;
+
+-- QUERY 2: PROFIT BY CATEGORY
+SELECT p.Category, SUM(o.Profit) AS Total_Profit
+FROM Orders o
+JOIN Products p
+ON o.Product_ID = p.Product_ID
+GROUP BY p.Category;
+
+-- QUERY 3: HIGHEST SALES CUSTOMER
+SELECT c.Customer_Name, SUM(o.Sales) AS Sales
+FROM Orders o
+JOIN Customers c
+ON o.Customer_ID = c.Customer_ID
+GROUP BY c.Customer_Name
+ORDER BY Sales DESC;
